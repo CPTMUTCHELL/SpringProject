@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Product's catalog</title>
+    <link rel="stylesheet"
+          href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css"
+          integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO"
+          crossorigin="anonymous">
+</head>
+<body>
+<div>
+    Welcome <span sec:authentication="principal.username"></span>
+    <span sec:authentication="principal.authorities"></span>
+</div>
+<a sec:authorize="hasAuthority('ADMIN')" th:href="@{/products/addProduct}">
+    <input type="submit" value="Add Product">
+</a>
+
+<form th:action="@{/products}" method="get">
+    <input th:value="${word != null} ? ${word}" name="word">
+    <button type="submit">Search</button>
+</form>
+<div> Three most viewed products:
+    <div th:each="prod:${top3}">
+        <span th:text="${prod.title}"></span>
+        <span th:text="${prod.views}"></span>
+    </div>
+</div>
+<div class="container my-2">
+    <table border="1" class = "table table-striped table-responsive-md">
+        <thead>
+            <tr>
+            <th>
+                <a th:href="@{'/products/' + ${currentPage} +'?sortField=id&dir=' +${reverseDir} }">ID</a>
+            </th>
+            <th>
+                <a th:href="@{'/products/' + ${currentPage} + '?sortField=title&dir=' +${reverseDir}}">Title</a>
+            </th>
+            <th>
+                <a th:href="@{'/products/' +${currentPage} + '?sortField=price&dir=' +${reverseDir}}">Price</a>
+            </th>
+            <th  sec:authorize="hasAuthority('ADMIN')">Show/Edit</th>
+            <th  sec:authorize="hasAuthority('ADMIN')">Remove</th>
+            </tr>
+        </thead>
+        <tbody>
+        <tr th:each="product:${productList}">
+            <td th:text="${product.id}"></td>
+            <td th:text="${product.title}"></td>
+            <td th:text="${product.price}"></td>
+            <td sec:authorize="hasAuthority('ADMIN')">
+                <a th:href="@{'/products/show/' +${product.id}}" name="id" th:text="Show"/>
+            </td>
+            <td sec:authorize="hasAuthority('ADMIN')">
+                <a th:href="@{'/products/remove/' +${product.id}}" name="id" th:text="Remove"/>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+
+    <span th:text="${productList.size()+' products at all'}"/>
+
+
+    <div th:if = "${totalPages>1}">
+        <div class="row col-sm-10">
+            <div class="col-sm-2">
+                Total rows:[[${totalProducts}]]
+            </div>
+            <div class="col-sm-1">
+                <span th:each="i:${#numbers.sequence(1,totalPages)}">
+                    <a th:if="${currentPage !=i}" th:href="@{'/products/'+${i}
+                    + '?sortField=' + ${sortField} + '&dir=' +${dir}}">[[${i}]]</a>
+                    <span th:unless="${currentPage !=i}">[[${i}]]</span> &nbsp; &nbsp;
+                </span>
+            </div>
+            <div class="col-sm-1">
+                <a th:if="${currentPage<totalPages}" th:href="@{'/products/' + ${currentPage+1}
+                 + '?sortField=' + ${sortField} + '&dir=' +${dir}}">Next</a>
+                <span th:unless="${currentPage<totalPages}">Next</span>
+            </div>
+            <div class="col-sm-1">
+                <a th:if="${currentPage < totalPages}" th:href="@{'/products/' + ${totalPages}
+                 + '?sortField=' + ${sortField} + '&dir=' +${dir}}">Last</a>
+                <span th:unless="${currentPage < totalPages}">Last</span>
+            </div>
+        </div>
+        <li sec:authorize="isAuthenticated()"> <a th:href="@{/logout}">Logout</a></li>
+    </div>
+</div>
+
+</body>
+</html>

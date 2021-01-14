@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org"><head>
+    <meta charset="UTF-8">
+    <title>Form</title>
+</head>
+<body>
+<table>
+    <tbody>
+
+    <td th:text="${'ID '+ product.id}"}/>
+    <td th:text="${'Name '+ product.title}"}/>
+    <td th:text="${'Price '+ product.price}"}/>
+    <td>
+        <a th:href="@{'/products/show/edit/' +${product.id}}" name="Edit" th:text="Edit">
+        </a>
+
+    </td>
+
+    </tbody>
+</table>
+
+</body>
+</html>

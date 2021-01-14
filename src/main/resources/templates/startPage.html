@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org"><head>
+    <meta charset="UTF-8">
+    <title>Start Page</title>
+</head>
+<body>
+<div th:if="${success}">
+    <p>You've successfully registered!</p>
+</div>
+<div th:if="${exist}">
+    <p>This user already exists!</p>
+</div>
+<div th:if="${param.logout}">
+    <p>You've been logged out!</p>
+</div>
+<div th:if="${param.error}">
+    <p>Invalid login or password!</p>
+</div>
+<form th:action="@{/loginPage}"  method="post">
+
+    <input type="text" id="username" name="username"
+           placeholder="Login" class="form-control mb-4 col-4">
+
+    <input type="password"  id="password" name="password"
+           placeholder="Password" class="form-control mb-4 col-4">
+    <button type="submit" class="btn btn-info col-2">Login</button>
+</form>
+<form th:action="@{/registration}" th:object="${userToRegister}" method="post">
+
+    <input type="hidden" th:field="*{id}"
+           placeholder="id" class="form-control mb-4 col-4">
+
+    <input type="text" th:field="*{login}"
+           placeholder="Login" class="form-control mb-4 col-4">
+
+
+    <input type="password" th:field="*{password}"
+           placeholder="Password" class="form-control mb-4 col-4">
+
+    <button type="submit" class="btn btn-info col-2">Register</button>
+</form>
+
+
+</body>
+</html>

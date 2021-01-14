@@ -1,0 +1,1 @@
+insert into boot.products (price, title) VALUES (10, 'Bread'),(20, 'Milk'),(30, 'Potato')
